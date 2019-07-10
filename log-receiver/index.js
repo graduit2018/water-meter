@@ -22,7 +22,7 @@ http.createServer((request, response) => {
 
             var kafka = require('kafka-node'),
                 Producer = kafka.Producer,
-                client = new kafka.KafkaClient('zookeeper:2181'),
+                client = new kafka.KafkaClient({kafkaHost: 'kafka:9093'}),
                 producer = new Producer(client);
 
             payloads = [
