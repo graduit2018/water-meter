@@ -36,6 +36,14 @@ services:
       - 3000:8080
     volumes:
       - ./log-receiver:/app
+  log-simulator:
+    image: node:10
+    working_dir: /app
+    stdin_open: true
+    networks:
+      - proxy
+    volumes:
+      - ./log-simulator:/app
 networks:
   proxy:
     external: true
