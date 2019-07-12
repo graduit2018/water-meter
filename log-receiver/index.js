@@ -17,27 +17,27 @@ http.createServer((request, response) => {
             body.push(chunk);
         }).on('end', () => {
             body = Buffer.concat(body).toString();
-            
-            // console.log(body);
+
+            console.log(body);
 
             var kafka = require('kafka-node'),
                 Producer = kafka.Producer,
-                client = new kafka.KafkaClient({kafkaHost: 'kafka:9093'}),
+                client = new kafka.KafkaClient({ kafkaHost: 'kafka:9093' }),
                 producer = new Producer(client);
 
             payloads = [
                 { topic: 'water', messages: body, partition: 0 },
             ];
-    
-            producer.on('ready', function() {
-                producer.send(payloads, function(err, data) {
+
+            producer.on('ready', function () {
+                producer.send(payloads, function (err, data) {
                     console.log('Sending');
                 });
             });
-    
+
             producer.on('error', function (err) { console.log(err) });
 
-            response.end(); 
+            response.end();
         });
     } else {
         response.statusCode = 404;
