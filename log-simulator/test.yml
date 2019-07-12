@@ -1,0 +1,16 @@
+config:
+  target: "http://log-receiver:8080"
+  phases:
+    - duration: 60
+      arrivalRate: 2
+  processor: "./generate-random-data.js"
+scenarios:
+  - name: "Send log"
+    flow:
+      - function: "generateRandomData"
+      - post:
+          url: "/litres"
+          json:
+            id: "{{ id }}"
+            no: "{{ no }}"
+      - log: "Sent a request to /litres with {{ id }}, {{ no }}"
