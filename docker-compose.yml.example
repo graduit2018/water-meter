@@ -1,11 +1,38 @@
 version: "3"
 services:
+  spark-master:
+    build: ./spark
+    image: apache-spark:latest
+    container_name: spark-master
+    ports:
+      - 8080:8080
+      - 7077:7077
+    networks:
+      - proxy
+    environment:
+      - SPARK_LOCAL_IP=spark-master
+      - SPARK_MASTER_PORT=7077
+      - SPARK_MASTER_WEBUI_PORT=8080
+    command: /start-master.sh
+  spark-worker:
+    build: ./spark
+    image: apache-spark:latest
+    depends_on:
+      - spark-master    
+    ports:
+      - 8080
+    networks:
+      - proxy
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_WORKER_WEBUI_PORT=8080
+    command: /start-worker.sh
   zookeeper:
     image: wurstmeister/zookeeper
     networks:
       - proxy
     ports:
-      - "2181:2181"
+      - 2181:2181
   kafka:
     image: wurstmeister/kafka
     depends_on:
@@ -13,11 +40,11 @@ services:
     networks:
       - proxy
     ports:
-      - "9092:9092"
+      - 9092:9092
     expose:
-      - "9093"
+      - 9093
     environment:
-      KAFKA_CREATE_TOPICS: "water:1:0:compact"
+      KAFKA_CREATE_TOPICS: water:1:0:compact
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
