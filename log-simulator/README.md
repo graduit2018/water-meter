@@ -11,3 +11,9 @@ Once Node.js is installed, install Artillery with:
 ```
 npm install -g artillery --unsafe-perm=true --allow-root
 ```
+
+then run
+
+```
+artillery run test.yml
+```
