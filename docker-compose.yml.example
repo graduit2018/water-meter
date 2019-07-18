@@ -5,20 +5,23 @@ services:
     image: apache-spark:latest
     container_name: spark-master
     ports:
+      - 8888:8888
       - 8080:8080
       - 7077:7077
     networks:
       - proxy
+    volumes:
+      - ./spark-app:/opt/notebooks
     environment:
       - SPARK_LOCAL_IP=spark-master
       - SPARK_MASTER_PORT=7077
       - SPARK_MASTER_WEBUI_PORT=8080
-    command: /start-master.sh
+    command: bash -c "/usr/bin/supervisord"
   spark-worker:
     build: ./spark
     image: apache-spark:latest
     depends_on:
-      - spark-master    
+      - spark-master
     ports:
       - 8080
     networks:
@@ -26,6 +29,7 @@ services:
     environment:
       - SPARK_MASTER=spark://spark-master:7077
       - SPARK_WORKER_WEBUI_PORT=8080
+      - SPARK_HOME=/spark
     command: /start-worker.sh
   zookeeper:
     image: wurstmeister/zookeeper
@@ -56,7 +60,7 @@ services:
     image: node:10
     working_dir: /app
     stdin_open: true
-    # command: node ./index.js
+    command: node ./index.js
     networks:
       - proxy
     ports:
