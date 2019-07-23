@@ -12,7 +12,8 @@ RUN wget http://mirror.downloadvn.com/apache/spark/spark-2.4.3/spark-2.4.3-bin-h
     wget -P /spark/jars/ https://repo1.maven.org/maven2/org/apache/spark/spark-streaming-kafka-0-8-assembly_2.11/2.4.3/spark-streaming-kafka-0-8-assembly_2.11-2.4.3.jar
 
 RUN pip3 --no-cache-dir install jupyterlab && \
-    pip3 --no-cache-dir install pyspark
+    pip3 --no-cache-dir install pyspark && \
+    pip3 --no-cache-dir install redis
 
 ENV SPARK_HOME=/spark \
     PYSPARK_PYTHON=/usr/bin/python3

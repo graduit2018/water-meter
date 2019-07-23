@@ -75,6 +75,10 @@ services:
       - proxy
     volumes:
       - ./log-simulator:/app
+  redis:
+    image: redis:alpine
+    networks:
+      - proxy
 networks:
   proxy:
     external: true
