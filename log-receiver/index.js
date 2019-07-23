@@ -1,5 +1,25 @@
 const http = require('http');
 
+function getFormattedDate() {
+    var date = new Date();
+
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var hour = date.getHours();
+    var min = date.getMinutes();
+    var sec = date.getSeconds();
+
+    month = (month < 10 ? "0" : "") + month;
+    day = (day < 10 ? "0" : "") + day;
+    hour = (hour < 10 ? "0" : "") + hour;
+    min = (min < 10 ? "0" : "") + min;
+    sec = (sec < 10 ? "0" : "") + sec;
+
+    var str = date.getFullYear() + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+
+    return str;
+}
+
 http.createServer((request, response) => {
     request.on('error', (err) => {
         console.error(err);
@@ -18,6 +38,10 @@ http.createServer((request, response) => {
         }).on('end', () => {
             body = Buffer.concat(body).toString();
 
+            body = JSON.parse(body);
+            body['time'] = getFormattedDate();
+            body = JSON.stringify(body);
+            
             console.log(body);
 
             var kafka = require('kafka-node'),

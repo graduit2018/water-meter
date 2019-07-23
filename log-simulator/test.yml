@@ -1,16 +1,24 @@
 config:
   target: "http://log-receiver:8080"
   phases:
-    - duration: 60
+    - duration: 3600
       arrivalRate: 2
-  processor: "./generate-random-data.js"
+  payload:
+    path: "test.csv"
+    fields:
+      - "id"
+      - "station"
+      - "litres"
+    order: sequence
+    skipHeader: true
+    cast: false
 scenarios:
   - name: "Send log"
     flow:
-      - function: "generateRandomData"
       - post:
           url: "/litres"
           json:
             id: "{{ id }}"
-            no: "{{ no }}"
-      - log: "Sent a request to /litres with {{ id }}, {{ no }}"
+            sta: "{{ station }}"
+            lit: "{{ litres }}"
+      - log: "Sent a request to /litres with {{ id }}, {{ station }}, {{ litres }}"
