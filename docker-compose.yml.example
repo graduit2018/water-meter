@@ -92,6 +92,17 @@ services:
       - "8081:8081"
     networks:
       - proxy
+  dashboard:
+    image: node:10
+    working_dir: /app
+    stdin_open: true
+    command: node ./index.js
+    networks:
+      - proxy
+    ports:
+      - 3001:9786
+    volumes:
+      - ./dashboard:/app
 networks:
   proxy:
     external: true
